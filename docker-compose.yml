@@ -1,12 +1,90 @@
 version: '3.8'
+
 services:
-  web-app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - 3000:4321
-    volumes:
-      - .:/app
+  postgres:
+    image: postgres:15
     environment:
-      - NODE_ENV=production
+      POSTGRES_DB: cinema_booking
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cinema-network    
+
+  auth-service:
+    build: ./auth-service
+    ports:
+      - "3001:8080"
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/cinema_booking?sslmode=disable
+      JWT_SECRET: your-jwt-secret-key
+      PORT: 8080
+      GOOGLE_CLIENT_ID: "your-google-client-id.googleusercontent.com"
+      GOOGLE_CLIENT_SECRET: "your-google-client-secret"
+    depends_on:
+      - postgres
+    networks:
+      - cinema-network    
+
+  cinema-service:
+    build: ./cinema-service
+    ports:
+      - "3002:8080"
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/cinema_booking?sslmode=disable
+      PORT: 8080
+    depends_on:
+      - postgres
+    networks:
+      - cinema-network    
+
+  booking-service:
+    build: ./booking-service
+    ports:
+      - "3003:8080"
+    environment:
+      DATABASE_URL: postgres://postgres:password@postgres:5432/cinema_booking?sslmode=disable
+      AUTH_SERVICE_URL: http://auth-service:8080
+      CINEMA_SERVICE_URL: http://cinema-service:8080
+      PORT: 8080
+    depends_on:
+      - postgres
+      - auth-service
+      - cinema-service
+    networks:
+      - cinema-network    
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:8080"
+    environment:
+      AUTH_SERVICE_URL: http://auth-service:8080
+      CINEMA_SERVICE_URL: http://cinema-service:8080
+      BOOKING_SERVICE_URL: http://booking-service:8080
+      PORT: 8080
+    depends_on:
+      - auth-service
+      - cinema-service
+      - booking-service
+    networks:
+      - cinema-network    
+
+  web-app:
+    build: ./web-app
+    ports:
+      - "4321:4321"
+    depends_on:
+      - api-gateway
+    networks:
+      - cinema-network
+
+volumes:
+  postgres_data:
+
+networks:
+  cinema-network:
+    driver: bridge

@@ -1,24 +1,65 @@
-# build output
-dist/
+# Go binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
 
-# generated types
-.astro/
+# Go test binary, built with `go test -c`
+*.test
 
-# dependencies
-node_modules/
+# Go coverage files
+*.out
+coverage.html
 
-# logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
+# Go workspace file
+go.work
 
-# environment variables
+# Environment variables
 .env
+.env.local
 .env.production
+.env.test
 
-# macOS-specific files
-.DS_Store
+# Docker
+.dockerignore
 
-# jetbrains setting folder
+# Logs
+*.log
+logs/
+
+# Temporary folders
+tmp/
+temp/
+
+# IDE files
+.vscode/
 .idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build artifacts
+build/
+dist/
+bin/
+
+node_modules
+.astro
+.vscode
+dist
+*.Identifier
