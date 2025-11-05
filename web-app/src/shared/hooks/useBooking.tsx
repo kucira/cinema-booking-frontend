@@ -8,7 +8,7 @@ export default function useBooking(token: string = "") {
 
   const handleBooking = async (payload: any, type: string) => {
     try {
-      if(token === "") return alert("Please login first");
+      if(token === "" && type === "online") return alert("Please login first");
       setIsLoading(true);
       setErrorMessage("");
       const result: BookingDetail =
