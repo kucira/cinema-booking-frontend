@@ -1,0 +1,20 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/features/auth/Header";
+
+export const prerender = false;
+const userToken = Astro.cookies.get("token")?.value;
+const { url } = Astro.request;
+const params = new URL(url).searchParams;
+console.log(params.get("qr"), 'params')
+---
+
+<Layout>
+  <Header user={userToken} />
+  <h1 class="text-center text-xl text-white mb-2">Booking Offline</h1>
+  <div
+    class="mx-auto grid grid-flow-col grid-rows-2 gap-10 justify-center items-center"
+  >
+    <img src={params.get("qr")} alt="barcode-offline" />
+  </div>
+</Layout>

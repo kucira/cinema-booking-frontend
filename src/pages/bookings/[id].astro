@@ -1,0 +1,14 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/features/auth/Header";
+import Seats from "../../components/features/booking/Seats";
+
+export const prerender = false;
+const { id } = Astro.params;
+const userToken = Astro.cookies.get("token")?.value;
+---
+
+<Layout>
+  <Header user={userToken} />
+  <Seats id={id} token={userToken} client:load />
+</Layout>

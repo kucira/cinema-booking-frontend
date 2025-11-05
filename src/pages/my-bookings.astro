@@ -1,0 +1,14 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/features/auth/Header';
+import MyBookings from '../components/features/booking/MyBookings';
+
+export const prerender = false;
+const userToken = Astro.cookies.get("token")?.value;
+
+---
+
+<Layout>
+	<Header user={userToken}/>
+    <MyBookings token={userToken} />
+</Layout>

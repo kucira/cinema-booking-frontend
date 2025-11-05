@@ -1,0 +1,16 @@
+---
+import QrScanner from "../components/features/validate/QrScanner";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/features/auth/Header";
+
+export const prerender = false;
+const userToken = Astro.cookies.get("token")?.value;
+
+---
+
+<Layout>
+  <Header user={userToken} />
+  <div class="flex items-center justify-center">
+    <QrScanner client:load />
+  </div>
+</Layout>
